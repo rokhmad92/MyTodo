@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:project1/model_content.dart';
 import 'package:project1/pages/login.dart';
 
-class intro extends StatefulWidget {
-  const intro({super.key});
+class Intro extends StatefulWidget {
+  const Intro({super.key});
 
   @override
-  State<intro> createState() => _introState();
+  State<Intro> createState() => _IntroState();
 }
 
-class _introState extends State<intro> {
+class _IntroState extends State<Intro> {
   int locationPage = 0;
   PageController _controller = PageController();
 
@@ -27,8 +27,8 @@ class _introState extends State<intro> {
 
   @override
   Widget build(BuildContext context) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
-    double _deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.green[200],
@@ -46,29 +46,29 @@ class _introState extends State<intro> {
               },
               itemBuilder: (BuildContext context, int i) {
                 return Padding(
-                  padding: EdgeInsets.all(50),
+                  padding: const EdgeInsets.all(50),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Image.asset(
                         contents[i].image,
-                        width: _deviceWidth * 0.70,
-                        height: _deviceHeight * 0.40,
+                        width: deviceWidth * 0.70,
+                        height: deviceHeight * 0.40,
                       ),
                       Text(
                         contents[i].title,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 21, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         contents[i].text,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 );
@@ -77,9 +77,9 @@ class _introState extends State<intro> {
           ),
           buildDot(contents, locationPage),
           Container(
-            width: _deviceWidth,
-            height: _deviceHeight * 0.08,
-            margin: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+            width: deviceWidth,
+            height: deviceHeight * 0.08,
+            margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
             child: TextButton(
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -90,17 +90,17 @@ class _introState extends State<intro> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Login(),
+                          builder: (context) => const Login(),
                         ));
                   }
                   _controller.nextPage(
-                    duration: Duration(milliseconds: 100),
+                    duration: const Duration(milliseconds: 200),
                     curve: Curves.bounceIn,
                   );
                 },
                 child: Text(
                   locationPage == contents.length - 1 ? 'Login' : 'Next',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 )),
           ),
         ],
@@ -108,21 +108,20 @@ class _introState extends State<intro> {
     );
   }
 
-  Container buildDot(contents, index) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-            contents.length,
-            (int i) => Container(
-                  width: index == i ? 25 : 10,
-                  height: 10,
-                  margin: EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.deepOrange,
-                  ),
-                )),
+  Widget buildDot(contents, index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        contents.length,
+        (int i) => Container(
+          width: index == i ? 25 : 10,
+          height: 10,
+          margin: const EdgeInsets.only(right: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Colors.deepOrange,
+          ),
+        ),
       ),
     );
   }
