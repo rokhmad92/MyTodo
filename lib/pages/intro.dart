@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project1/model_content.dart';
+import 'package:project1/services/intro_service.dart';
 import 'package:project1/pages/login.dart';
 
 class Intro extends StatefulWidget {
@@ -16,6 +16,7 @@ class _IntroState extends State<Intro> {
   @override
   void initState() {
     _controller = PageController(initialPage: 0);
+
     super.initState();
   }
 
@@ -94,8 +95,8 @@ class _IntroState extends State<Intro> {
                         ));
                   }
                   _controller.nextPage(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.bounceIn,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
                   );
                 },
                 child: Text(

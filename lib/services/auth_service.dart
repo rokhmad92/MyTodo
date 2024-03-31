@@ -1,48 +1,38 @@
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Auth extends ChangeNotifier {
-  String _username = '';
-  String _password = '';
-  bool _isLoading = false;
-  bool _isLoggedIn = false;
-  String _errorMessage = '';
+class AuthService {
+  Future<bool> login(String email, String password) async {
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        'http://127.0.0.1:8000/api/auth/login',
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
 
-  String get username => _username;
-  String get password => _password;
-  bool get isLoading => _isLoading;
-  bool get isLoggedIn => _isLoggedIn;
-  String get errorMessage => _errorMessage;
-
-  void setUsername(String username) {
-    _username = username;
-    notifyListeners();
+      Map obj = response.data;
+      saveToken(obj['token']);
+      return true;
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
   }
 
-  void setPassword(String password) {
-    _password = password;
-    notifyListeners();
+  void saveToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+
+    // Atur expiry date 1 minggu dari sekarang
+    DateTime now = DateTime.now();
+    DateTime expiryDate = now.add(const Duration(days: 7));
+    prefs.setString('expiryDate', expiryDate.toIso8601String());
   }
 
-  void login() {
-    _isLoading = true;
-    Future.delayed(const Duration(seconds: 2), () {
-      if (_username == 'admin' && _password == 'password') {
-        _isLoggedIn = true;
-        _isLoading = false;
-        _errorMessage = '';
-      } else {
-        _isLoggedIn = false;
-        _isLoading = false;
-        _errorMessage = 'Invalid username or password';
-      }
-      notifyListeners();
-    });
-  }
-
-  void logout() {
-    _isLoggedIn = false;
-    _username = '';
-    _password = '';
-    notifyListeners();
-  }
+  void logout() {}
+  void withGoogle() {}
 }

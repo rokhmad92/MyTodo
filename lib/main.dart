@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:project1/pages/home.dart';
 import 'pages/intro.dart';
+import './services/token_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  String? token = await getToken();
+  runApp(MyApp(token: token));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? token;
+  const MyApp({Key? key, this.token}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Pengiriman Paket',
+      title: 'To Do List',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
       ),
-      home: const Intro(),
+      home: token != null ? const Home() : const Intro(),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project1/pages/home.dart';
+import 'package:project1/services/auth_service.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -10,11 +12,30 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
+  String? email;
+  String? password;
 
   @override
   void initState() {
     _passwordVisible = false;
     super.initState();
+  }
+
+  void doLogin(context) async {
+    if (_formKey.currentState!.validate()) {
+      AuthService authService = AuthService();
+      bool loginSuccess = await authService.login(email!, password!);
+
+      if (!loginSuccess) {
+        // ketika login gagal
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ));
+      }
+    }
   }
 
   @override
@@ -23,43 +44,42 @@ class LoginState extends State<Login> {
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.green[200],
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            flex: 40,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/iconLogin.png',
-                  height: deviceHeight * 0.40,
-                  width: deviceWidth,
-                )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: deviceHeight * 0.4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/iconLogin.png',
+                    height: deviceHeight * 0.4,
+                    width: deviceWidth,
+                  )
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            flex: 60,
-            child: Container(
+            Container(
               width: deviceWidth,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35),
-                    topRight: Radius.circular(35)),
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
                       'Selamat Datang',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
                     ),
                     const SizedBox(
                       height: 7,
@@ -67,7 +87,7 @@ class LoginState extends State<Login> {
                     const Text(
                       'Silahkan mengisi form login terlebih dahulu untuk menikmati fasilitas kami',
                       style: TextStyle(
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w200,
                         fontSize: 17,
                         color: Colors.grey,
                       ),
@@ -79,28 +99,51 @@ class LoginState extends State<Login> {
                     Form(
                       key: _formKey,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: deviceWidth * 0.05,
+                        ),
                         child: Column(
                           children: [
                             TextFormField(
-                              // maxLength: 20,
+                              onChanged: (value) {
+                                setState(() {
+                                  email = value;
+                                });
+                              },
+                              validator: (value) {
+                                return (value == null || value.isEmpty)
+                                    ? 'Email is required'
+                                    : null;
+                              },
                               decoration: const InputDecoration(
-                                  labelText: 'Email or Username',
-                                  hintText: 'Enter your email or username',
-                                  border: OutlineInputBorder()),
+                                labelText: 'Email',
+                                hintText: 'Enter your email',
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 15,
+                                ),
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             TextFormField(
+                              onChanged: (value) {
+                                setState(() {
+                                  password = value;
+                                });
+                              },
                               obscureText: !_passwordVisible,
                               validator: (String? value) {
                                 return (value != null && value.length < 8)
                                     ? 'Please enter at least 8 characters.'
                                     : null;
                               },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
-                                // hintText: 'What do people call you?',
                                 labelText: 'Password',
                                 hintText: 'Enter your password',
                                 suffixIcon: IconButton(
@@ -114,6 +157,11 @@ class LoginState extends State<Login> {
                                   },
                                 ),
                                 border: const OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 15,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -124,11 +172,45 @@ class LoginState extends State<Login> {
                               height: deviceHeight * 0.06,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('nice');
+                                  doLogin(context);
                                 },
                                 child: const Text(
                                   "Log in",
                                   style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: deviceHeight * 0.06,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[50],
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Colors.grey.shade100,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                                onPressed: () {},
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Belum Punya Akun',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -163,30 +245,41 @@ class LoginState extends State<Login> {
                               width: double.infinity,
                               height: deviceHeight * 0.06,
                               child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey[
-                                        100], // Atur warna latar belakang menjadi putih
-                                  ),
-                                  onPressed: () {},
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'Google',
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.black),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[50],
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Colors.grey.shade100,
+                                        width: 1,
                                       ),
-                                      const SizedBox(
-                                        width: 5,
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/googleIcon.png',
+                                      width: 22,
+                                      height: 22,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Text(
+                                      'Google',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
                                       ),
-                                      Image.asset(
-                                        'assets/googleIcon.png',
-                                        width: 22,
-                                        height: 22,
-                                      ),
-                                    ],
-                                  )),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
+                            const SizedBox(
+                              height: 16,
+                            )
                           ],
                         ),
                       ),
@@ -195,8 +288,8 @@ class LoginState extends State<Login> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
