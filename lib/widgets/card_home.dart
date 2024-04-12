@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CardHome extends StatelessWidget {
-  const CardHome({
-    super.key,
-  });
+  final Map<String, dynamic> data;
+  const CardHome({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,51 +26,48 @@ class CardHome extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.calendar_month,
-                    color: Colors.white,
-                  )),
-              const Text(
+              // IconButton(
+              //   onPressed: () {},
+              //   icon: const Icon(
+              //     Icons.calendar_month,
+              //     color: Colors.white,
+              //   ),
+              // ),
+              Text(
                 'To Do List',
                 style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 2,
+                ),
               ),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  )),
+              // SizedBox(width: 48), // Jarak antara teks dan ikon tambah (+)
             ],
           ),
           const SizedBox(
             height: 30,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
                 children: [
                   Text(
-                    '5',
-                    style: TextStyle(
+                    data['total'].toString(),
+                    style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
-                  Text(
+                  const Text(
                     'Total',
                     style: TextStyle(
                         fontSize: 23,
@@ -84,17 +80,17 @@ class CardHome extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '2',
-                    style: TextStyle(
+                    data['done'].toString(),
+                    style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
-                  Text(
+                  const Text(
                     'Selesai',
                     style: TextStyle(
                         fontSize: 23,
@@ -107,17 +103,17 @@ class CardHome extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '3',
-                    style: TextStyle(
+                    data['proses'].toString(),
+                    style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
-                  Text(
+                  const Text(
                     'Proses',
                     style: TextStyle(
                         fontSize: 23,

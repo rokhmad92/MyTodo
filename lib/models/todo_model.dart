@@ -1,31 +1,24 @@
-import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 class TodoModel {
-  String? token;
+  int id;
+  String name;
+  String? due;
+  int countTask;
+  int countDone;
 
-  Future<void> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-  }
+  TodoModel(
+      {required this.id,
+      required this.name,
+      required this.due,
+      required this.countTask,
+      required this.countDone});
 
-  Future<List<dynamic>> getTodos() async {
-    await getToken();
-    try {
-      final dio = Dio();
-      final response = await dio.get(
-        'http://127.0.0.1:8000/api/todo',
-        options: Options(headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        }),
-      );
-
-      print(response.data['data']);
-      return response.data['data'];
-    } catch (e) {
-      print('Error: $e');
-      return [];
-    }
+  factory TodoModel.fromJson(Map<String, dynamic> json) {
+    return TodoModel(
+      id: json['id'],
+      name: json['name'],
+      due: json['due'],
+      countTask: json['countTask'],
+      countDone: json['countDone'],
+    );
   }
 }

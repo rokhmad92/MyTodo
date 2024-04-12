@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../global_variable.dart';
 
 class AuthService {
   Future<bool> login(String email, String password) async {
     try {
       final dio = Dio();
       final response = await dio.post(
-        'http://127.0.0.1:8000/api/auth/login',
+        '${baseUrl}auth/login',
         options: Options(headers: {'Content-Type': 'application/json'}),
         data: {
           'email': email,

@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\Title;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -25,9 +26,40 @@ Route::middleware('auth:sanctum')->post('/repo', [RepositoryController::class, '
 
 // get data with token
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/todo', function () {
+    Route::get('/count', function () {
+        $todo = Title::count();
+        $done = Task::where('done', true)->count();
+        $proses = Task::where('done', false)->count();
+        $data = [
+            'total' => $todo,
+            'done' => $done,
+            'proses' => $proses,
+        ];
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    });
+    Route::get('/todos', function () {
         $data = Title::all();
         return new todosResource($data);
+    });
+    Route::post('/todos', function (Request $request) {
+        $validateData = Validator::make($request->input(), [
+            'name' => 'required',
+        ]);
+
+        if ($validateData->fails()) {
+            return response()->json([
+                'message' => $validateData->errors()->all(),
+            ], 422);
+        }
+
+        Title::create($request->input());
+
+        return response()->json([
+            'message' => 'Berhasil create data',
+        ], 201);
     });
     Route::get('/task/{id}', function ($todoId) {
         $data = Task::where('title_id', $todoId)->get();

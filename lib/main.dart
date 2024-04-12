@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project1/pages/home.dart';
 import 'pages/intro.dart';
-import './services/token_service.dart';
+import 'global_variable.dart';
 
 void main() async {
   String? token = await getToken();

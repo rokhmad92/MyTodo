@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project1/models/todo_model.dart';
 
 class ListData extends StatelessWidget {
-  const ListData({
-    super.key,
-  });
+  final TodoModel todo;
+  const ListData({Key? key, required this.todo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,8 @@ class ListData extends StatelessWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
 
     return Card(
-      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 14),
+      elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -25,23 +26,29 @@ class ListData extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
+              Row(
                 children: [
                   Icon(
-                    Icons.check_circle,
+                    todo.countDone != 0
+                        ? Icons.circle_outlined
+                        : Icons.check_circle,
                     color: Colors.blue,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    'Judul Data',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                  )
+                  Text(todo.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        decoration: todo.countDone != 0
+                            ? null
+                            : TextDecoration.lineThrough,
+                      ))
                 ],
               ),
               Text(
-                '10 Tugas',
+                '${todo.countTask} Task',
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w100,

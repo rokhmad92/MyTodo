@@ -19,6 +19,7 @@ class todoResource extends JsonResource
             'name' => $this->name,
             'due' => $this->due,
             'countTask' => $this->tasks->count(),
+            'countDone' => $this->tasks()->where('done', false)->count(),
         ];
     }
 }
