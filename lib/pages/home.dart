@@ -3,7 +3,7 @@ import 'package:project1/models/todo_model.dart';
 import 'package:project1/services/todo_service.dart';
 import 'package:project1/widgets/card_home.dart';
 import 'package:project1/widgets/dialog.dart';
-import 'package:project1/widgets/list_data.dart';
+import 'package:project1/widgets/list_todo.dart';
 import '../widgets/search.dart';
 
 class Home extends StatefulWidget {
@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
                     ],
                   );
                 } else {
-                  return ListData(todo: _todos[index]);
+                  return ListTodo(todo: _todos[index]);
                 }
               },
             )

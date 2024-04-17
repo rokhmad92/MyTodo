@@ -25,44 +25,44 @@ Route::middleware('auth:sanctum')->post('/repo', [RepositoryController::class, '
 //Route::middleware(['auth:sanctum', 'abilities:repo-create'])->post('/repo', [RepositoryController::class, 'index']);
 
 // get data with token
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/count', function () {
-        $todo = Title::count();
-        $done = Task::where('done', true)->count();
-        $proses = Task::where('done', false)->count();
-        $data = [
-            'total' => $todo,
-            'done' => $done,
-            'proses' => $proses,
-        ];
+// Route::middleware('auth:sanctum')->group(function () {
+Route::get('/count', function () {
+    $todo = Title::count();
+    $done = Task::where('done', true)->count();
+    $proses = Task::where('done', false)->count();
+    $data = [
+        'total' => $todo,
+        'done' => $done,
+        'proses' => $proses,
+    ];
 
-        return response()->json([
-            'data' => $data,
-        ]);
-    });
-    Route::get('/todos', function () {
-        $data = Title::all();
-        return new todosResource($data);
-    });
-    Route::post('/todos', function (Request $request) {
-        $validateData = Validator::make($request->input(), [
-            'name' => 'required',
-        ]);
-
-        if ($validateData->fails()) {
-            return response()->json([
-                'message' => $validateData->errors()->all(),
-            ], 422);
-        }
-
-        Title::create($request->input());
-
-        return response()->json([
-            'message' => 'Berhasil create data',
-        ], 201);
-    });
-    Route::get('/task/{id}', function ($todoId) {
-        $data = Task::where('title_id', $todoId)->get();
-        return new tasksResource($data);
-    });
+    return response()->json([
+        'data' => $data,
+    ]);
 });
+Route::get('/todos', function () {
+    $data = Title::all();
+    return new todosResource($data);
+});
+Route::post('/todos', function (Request $request) {
+    $validateData = Validator::make($request->input(), [
+        'name' => 'required',
+    ]);
+
+    if ($validateData->fails()) {
+        return response()->json([
+            'message' => $validateData->errors()->all(),
+        ], 422);
+    }
+
+    Title::create($request->input());
+
+    return response()->json([
+        'message' => 'Berhasil create data',
+    ], 201);
+});
+Route::get('/task/{id}', function ($todoId) {
+    $data = Task::with('title')->where('title_id', $todoId)->orderBy('done', 'DESC')->get();
+    return new tasksResource($data);
+});
+// });

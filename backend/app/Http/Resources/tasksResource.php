@@ -15,8 +15,11 @@ class tasksResource extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => taskResource::collection($this->collection),
-            'total' => count($this->collection)
+            'name' => $this->collection->map(function ($item) {
+                return $item->title->name;
+            })->first(),
+            'total' => count($this->collection),
+            'data' => taskResource::collection($this->collection)
         ];
     }
 }

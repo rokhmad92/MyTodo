@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project1/models/todo_model.dart';
+import 'package:project1/pages/show_todo.dart';
 
-class ListData extends StatelessWidget {
+class ListTodo extends StatelessWidget {
   final TodoModel todo;
-  const ListData({Key? key, required this.todo}) : super(key: key);
+  const ListTodo({Key? key, required this.todo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,10 @@ class ListData extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ShowTodo(id: todo.id)));
+        },
         child: Container(
           padding: const EdgeInsets.all(20),
           width: deviceWidth * 0.9,
