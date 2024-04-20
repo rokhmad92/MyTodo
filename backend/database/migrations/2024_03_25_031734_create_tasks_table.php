@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('title_id')->unsigned()->constrained('titles');
             $table->string('name');
-            $table->boolean('done');
+            $table->boolean('done')->default(false);
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class LoginState extends State<Login> {
     super.initState();
   }
 
-  void doLogin(context) async {
+  Future<void> doLogin(context) async {
     if (_formKey.currentState!.validate()) {
       AuthService authService = AuthService();
       bool loginSuccess = await authService.login(email!, password!);
@@ -38,12 +38,21 @@ class LoginState extends State<Login> {
     }
   }
 
+  void comingSoon() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Coming Soon...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.green[200],
+      backgroundColor: Colors.green[400],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -196,6 +205,40 @@ class LoginState extends State<Login> {
                                       ),
                                       borderRadius: BorderRadius.circular(5)),
                                 ),
+                                onPressed: () => {comingSoon()},
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Daftar Akun',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: deviceHeight * 0.06,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[50],
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Colors.grey.shade100,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
                                 onPressed: () {},
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +247,7 @@ class LoginState extends State<Login> {
                                       width: 5,
                                     ),
                                     Text(
-                                      'Belum Punya Akun',
+                                      'Tanpa Login',
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,
@@ -254,7 +297,7 @@ class LoginState extends State<Login> {
                                       ),
                                       borderRadius: BorderRadius.circular(5)),
                                 ),
-                                onPressed: () {},
+                                onPressed: () => {comingSoon()},
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

@@ -1,16 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:project1/models/todo_model.dart';
 import 'package:project1/pages/show_todo.dart';
+import 'package:project1/services/todo_service.dart';
 
-class ListTodo extends StatelessWidget {
+class ListTodo extends StatefulWidget {
   final TodoModel todo;
-  const ListTodo({Key? key, required this.todo}) : super(key: key);
+  final Function() getData;
+  const ListTodo({Key? key, required this.todo, required this.getData})
+      : super(key: key);
+
+  @override
+  State<ListTodo> createState() => _ListTodoState();
+}
+
+class _ListTodoState extends State<ListTodo> {
+  late final TodoModel todo;
+  final TodoService todoService = TodoService();
+
+  Future<void> removeTodo(id) async {
+    String result = await todoService.removeTodo(id);
+    widget.getData();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(result),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    todo = widget.todo;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 14),
       elevation: 5,
@@ -19,9 +46,12 @@ class ListTodo extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          Navigator.push(context,
+        onTap: () async {
+          final showData = await Navigator.push(context,
               MaterialPageRoute(builder: (context) => ShowTodo(id: todo.id)));
+          if (showData == true) {
+            widget.getData();
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -51,12 +81,21 @@ class ListTodo extends StatelessWidget {
                       ))
                 ],
               ),
-              Text(
-                '${todo.countTask} Task',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w100,
-                    color: Colors.grey[400]),
+              Row(
+                children: [
+                  Text(
+                    '${todo.countTask} Task',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w100,
+                        color: Colors.grey[400]),
+                  ),
+                  IconButton(
+                    splashRadius: 20,
+                    icon: const Icon(Icons.remove),
+                    onPressed: () => {removeTodo(todo.id)},
+                  ),
+                ],
               )
             ],
           ),

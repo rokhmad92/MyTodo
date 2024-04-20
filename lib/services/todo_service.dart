@@ -31,11 +31,11 @@ class TodoService {
             responseData.map((e) => TodoModel.fromJson(e)).toList();
         return todos;
       } else {
-        print('Error: ${response.statusCode}');
+        // print('Error: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      print('Error: $e');
+      // print('Error: $e');
     }
   }
 
@@ -61,7 +61,7 @@ class TodoService {
     }
   }
 
-  Future<Map<String, dynamic>> addTodo(String name) async {
+  Future<String> addTodo(String name) async {
     try {
       token = await getToken();
       final dio = Dio();
@@ -73,14 +73,34 @@ class TodoService {
           data: {'name': name});
       if (response.statusCode == 201) {
         // print(response.data['message']);
-        return response.data;
+        return response.data['message'].toString();
       } else {
         // print('Error: ${response.statusCode}');
-        return {'message': response.data['message']};
+        return response.data['message'].toString();
       }
     } catch (e) {
       // print('Error: $e');
-      return {'message': e};
+      return e.toString();
+    }
+  }
+
+  Future<String> removeTodo(int id) async {
+    try {
+      token = await getToken();
+      final dio = Dio();
+      final response = await dio.delete('${baseUrl}todos/$id',
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          }),
+          data: {'id': id});
+      if (response.statusCode == 201) {
+        return response.data['message'].toString();
+      } else {
+        return response.data['message'].toString();
+      }
+    } catch (e) {
+      return e.toString();
     }
   }
 }

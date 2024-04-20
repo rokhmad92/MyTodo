@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\ApiTokenController;
-use App\Http\Controllers\RepositoryController;
-use App\Http\Resources\tasksResource;
-use App\Http\Resources\todosResource;
 use App\Models\Task;
 use App\Models\Title;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\tasksResource;
+use App\Http\Resources\todosResource;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\RepositoryController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -25,44 +26,99 @@ Route::middleware('auth:sanctum')->post('/repo', [RepositoryController::class, '
 //Route::middleware(['auth:sanctum', 'abilities:repo-create'])->post('/repo', [RepositoryController::class, 'index']);
 
 // get data with token
-// Route::middleware('auth:sanctum')->group(function () {
-Route::get('/count', function () {
-    $todo = Title::count();
-    $done = Task::where('done', true)->count();
-    $proses = Task::where('done', false)->count();
-    $data = [
-        'total' => $todo,
-        'done' => $done,
-        'proses' => $proses,
-    ];
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/count', function () {
+        $todo = Title::count();
+        $done = Title::whereDoesntHave('tasks', function ($query) {
+            $query->where('done', false);
+        })->count();
+        $proses = 0;
+        $data = [
+            'total' => $todo,
+            'done' => $done,
+            'proses' => $proses,
+        ];
 
-    return response()->json([
-        'data' => $data,
-    ]);
-});
-Route::get('/todos', function () {
-    $data = Title::all();
-    return new todosResource($data);
-});
-Route::post('/todos', function (Request $request) {
-    $validateData = Validator::make($request->input(), [
-        'name' => 'required',
-    ]);
-
-    if ($validateData->fails()) {
         return response()->json([
-            'message' => $validateData->errors()->all(),
-        ], 422);
-    }
+            'data' => $data,
+        ]);
+    });
 
-    Title::create($request->input());
+    Route::get('/todos', function () {
+        $data = Title::all();
+        return new todosResource($data);
+    });
+    Route::post('/todos', function (Request $request) {
+        $validateData = Validator::make($request->input(), [
+            'name' => 'required',
+        ]);
 
-    return response()->json([
-        'message' => 'Berhasil create data',
-    ], 201);
+        if ($validateData->fails()) {
+            return response()->json([
+                'message' => $validateData->errors()->all(),
+            ], 422);
+        }
+
+        Title::create($request->input());
+
+        return response()->json([
+            'message' => 'Berhasil create data',
+        ], 201);
+    });
+    Route::delete('/todos/{id}', function ($id) {
+        DB::transaction(function () use ($id) {
+            Task::where('title_id', $id)->delete();
+            Title::findOrFail($id)->delete();
+        });
+
+        return response()->json([
+            'message' => 'Todo Berhasil Di Hapus',
+        ], 201);
+    });
+
+    Route::get('/task/{id}', function ($todoId) {
+        $data = Task::with('title')->where('title_id', $todoId)->orderBy('done', 'ASC')->get();
+        return new tasksResource($data);
+    });
+    Route::post('task/{id}', function (Request $request, $id) {
+        $validateData = Validator::make($request->input(), [
+            'name' => 'required',
+        ]);
+
+        if ($validateData->fails()) {
+            return response()->json([
+                'message' => $validateData->errors()->all(),
+            ], 422);
+        }
+
+        Task::create([
+            'title_id' => $id,
+            'name' => $request->input('name'),
+        ]);
+
+        return response()->json([
+            'message' => 'Berhasil create data',
+        ], 201);
+    });
+    Route::put('task/{id}', function ($id) {
+        $data = Task::findOrFail($id);
+        if ($data->done == true) {
+            $data->update(['done' => false]);
+            return response()->json([
+                'message' => 'Task Dibuka',
+            ], 201);
+        } else {
+            $data->update(['done' => true]);
+            return response()->json([
+                'message' => 'Task Berhasil Di Selesaikan',
+            ], 201);
+        }
+    });
+    Route::delete('task/{id}', function ($id) {
+        Task::findOrFail($id)->delete();
+
+        return response()->json([
+            'message' => 'Task Berhasil Di Hapus',
+        ], 201);
+    });
 });
-Route::get('/task/{id}', function ($todoId) {
-    $data = Task::with('title')->where('title_id', $todoId)->orderBy('done', 'DESC')->get();
-    return new tasksResource($data);
-});
-// });

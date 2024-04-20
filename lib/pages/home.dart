@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/models/todo_model.dart';
 import 'package:project1/services/todo_service.dart';
 import 'package:project1/widgets/card_home.dart';
-import 'package:project1/widgets/dialog.dart';
+import 'package:project1/widgets/dialog_create.dart';
 import 'package:project1/widgets/list_todo.dart';
 import '../widgets/search.dart';
 
@@ -17,16 +17,23 @@ class _HomeState extends State<Home> {
   List<TodoModel> _todos = [];
   Map<String, dynamic> _count = {};
   final TodoService _todoService = TodoService();
+  bool _isLoading = false;
 
-  getTodos({String? orderByCountDone}) async {
+  Future<void> getData({String? orderByCountDone}) async {
+    setState(() {
+      _todos.clear();
+      _isLoading = true;
+    });
     _todos = await _todoService.getTodo(orderBy: orderByCountDone);
     _count = await _todoService.getCount();
-    setState(() {});
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   void initState() {
-    getTodos();
+    getData();
     super.initState();
   }
 
@@ -34,7 +41,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _todos.clear();
     });
-    getTodos(orderByCountDone: orderBy);
+    getData(orderByCountDone: orderBy);
   }
 
   @override
@@ -52,37 +59,46 @@ class _HomeState extends State<Home> {
             const SizedBox(
               height: 20,
             ),
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              shrinkWrap: true,
-              itemCount: _todos.length,
-              itemBuilder: (context, index) {
-                if (_todos.isEmpty) {
-                  return const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        'Data Kosong',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return ListTodo(todo: _todos[index]);
-                }
-              },
-            )
+            _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    shrinkWrap: true,
+                    itemCount: _todos.length,
+                    itemBuilder: (context, index) {
+                      if (_todos.isEmpty) {
+                        return const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              'Data Kosong',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return ListTodo(todo: _todos[index], getData: getData);
+                      }
+                    },
+                  )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () => {
-          TodoDialogHelper.showTodoDialog(context),
+        backgroundColor: Colors.blueGrey,
+        onPressed: () async {
+          String? result =
+              await TodoDialogHelper.showTodoDialog(context, 'home');
+          if (result == 'yes') {
+            getData();
+          }
         },
         child: const Icon(Icons.add),
       ),

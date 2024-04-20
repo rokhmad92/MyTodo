@@ -13,9 +13,9 @@ class CardHome extends StatelessWidget {
             bottomLeft: Radius.circular(35), bottomRight: Radius.circular(35)),
         gradient: LinearGradient(
           colors: [
-            Color(0xFF9CCC65), // Warna hijau muda 1
-            Color(0xFF8BC34A), // Warna hijau muda 2
-            Color(0xFF7CB342), // Warna merah Instagram
+            Color.fromRGBO(56, 142, 60, 1), // Warna hijau tua
+            Color.fromRGBO(76, 175, 80, 1), // Warna hijau yang lebih terang
+            Color.fromRGBO(98, 226, 105, 1), // Warna hijau muda
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -45,6 +45,13 @@ class CardHome extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
+              // IconButton(
+              //   onPressed: () => {},
+              //   icon: const Icon(
+              //     Icons.logout,
+              //     color: Colors.white,
+              //   ),
+              // ),
               // SizedBox(width: 48), // Jarak antara teks dan ikon tambah (+)
             ],
           ),

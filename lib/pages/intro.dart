@@ -32,7 +32,7 @@ class _IntroState extends State<Intro> {
     double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.green[200],
+      backgroundColor: Colors.green[400],
       body: Column(
         children: [
           Expanded(

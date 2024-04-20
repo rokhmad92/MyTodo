@@ -15,6 +15,9 @@ class tasksResource extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->collection->map(function ($item) {
+                return $item->title->id;
+            })->first(),
             'name' => $this->collection->map(function ($item) {
                 return $item->title->name;
             })->first(),
