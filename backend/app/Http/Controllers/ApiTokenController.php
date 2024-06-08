@@ -10,6 +10,26 @@ use Illuminate\Support\Facades\Hash;
 
 class ApiTokenController extends Controller
 {
+    public function login(ApiTokenLoginRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => "Username Atau Password Salah!!"], 401);
+        }
+
+        $user->tokens()->where('name', $request->email)->delete();
+
+        $token = $user->createToken($request->email);
+        // Abilities
+        //$token = $user->createToken($request->token_name, ['repo:view']);
+
+        return [
+            'token' => $token->plainTextToken,
+            'user' => $user
+        ];
+    }
+
     public function register(ApiTokenRegisterRequest $request)
     {
         if (User::where('email', $request->email)->exists()) {
@@ -33,30 +53,15 @@ class ApiTokenController extends Controller
         ];
     }
 
-    public function login(ApiTokenLoginRequest $request)
-    {
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => "Username Atau Password Salah!!"], 401);
-        }
-
-        $user->tokens()->where('name', $request->email)->delete();
-
-        $token = $user->createToken($request->email);
-        // Abilities
-        //$token = $user->createToken($request->token_name, ['repo:view']);
-
-        return [
-            'token' => $token->plainTextToken,
-            'user' => $user
-        ];
-    }
-
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken();
 
-        return response(null, 204);
+        if ($token) {
+            $token->delete();
+        }
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 }

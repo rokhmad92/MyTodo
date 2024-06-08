@@ -12,14 +12,14 @@ class todoResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request = null): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
             'due' => $this->due,
             'countTask' => $this->tasks->count(),
-            'countDone' => $this->tasks()->where('done', false)->count(),
+            'countDone' => $this->tasks()->where('done', true)->count(),
         ];
     }
 }

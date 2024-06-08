@@ -1,26 +1,30 @@
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variable.dart';
 
-class AuthService {
-  Future<bool> login(String email, String password) async {
-    try {
-      final dio = Dio();
-      final response = await dio.post(
-        '${baseUrl}auth/login',
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
+class AuthServiceOffline {
+  late String? token;
 
-      Map obj = response.data;
-      saveToken(obj['token']);
+  Future<bool> login() async {
+    try {
+      saveToken('Offline');
       return true;
     } catch (e) {
-      print('Error: $e');
+      // print('Error: $e');
       return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> logout() async {
+    try {
+      token = await getToken();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.remove('token');
+      prefs.remove('expiryDate');
+      return {'message': 'Successfully Logout!'};
+    } catch (e) {
+      // print('Error: $e');
+      return {'message': e};
     }
   }
 
@@ -33,7 +37,4 @@ class AuthService {
     DateTime expiryDate = now.add(const Duration(days: 7));
     prefs.setString('expiryDate', expiryDate.toIso8601String());
   }
-
-  void logout() {}
-  // void withGoogle() {}
 }

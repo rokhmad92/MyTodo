@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:project1/models/todo_model.dart';
-import 'package:project1/pages/show_todo.dart';
-import 'package:project1/services/todo_service.dart';
+import '../models/todo_model.dart';
+import '../pages/show_todo.dart';
+import '../services_Offline/todo_service.dart';
+import '../services_Online/todo_service.dart';
 
 class ListTodo extends StatefulWidget {
   final TodoModel todo;
   final Function() getData;
-  const ListTodo({Key? key, required this.todo, required this.getData})
+  final String? token;
+  const ListTodo(
+      {Key? key,
+      required this.todo,
+      required this.getData,
+      required this.token})
       : super(key: key);
 
   @override
@@ -16,9 +22,13 @@ class ListTodo extends StatefulWidget {
 class _ListTodoState extends State<ListTodo> {
   late final TodoModel todo;
   final TodoService todoService = TodoService();
+  final TodoServiceOffline todoServiceOffline = TodoServiceOffline();
 
   Future<void> removeTodo(id) async {
-    String result = await todoService.removeTodo(id);
+    String result = widget.token == 'Offline'
+        ? await todoServiceOffline.removeTodo(id)
+        : await todoService.removeTodo(id);
+
     widget.getData();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +73,7 @@ class _ListTodoState extends State<ListTodo> {
               Row(
                 children: [
                   Icon(
-                    todo.countDone != 0
+                    todo.countTask != todo.countDone
                         ? Icons.circle_outlined
                         : Icons.check_circle,
                     color: Colors.blue,
@@ -75,7 +85,7 @@ class _ListTodoState extends State<ListTodo> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        decoration: todo.countDone != 0
+                        decoration: todo.countTask != todo.countDone
                             ? null
                             : TextDecoration.lineThrough,
                       ))

@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\RepositoryController;
+use App\Http\Resources\todoResource;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// auth
 Route::post('/auth/login', [ApiTokenController::class, 'login']);
 Route::post('/auth/register', [ApiTokenController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [ApiTokenController::class, 'logout']);
@@ -28,13 +30,24 @@ Route::middleware('auth:sanctum')->post('/repo', [RepositoryController::class, '
 // get data with token
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/count', function () {
-        $todo = Title::count();
-        $done = Title::whereDoesntHave('tasks', function ($query) {
-            $query->where('done', false);
-        })->count();
+        $getData = Title::user()->get();
+        $totalTodo = $getData->count(); // total
+
+        // perhitungan done & proses
+        $todoResources = new todosResource($getData);
+        $done = 0;
         $proses = 0;
+        foreach ($todoResources as $item) {
+            $todoResource = new todoResource($item);
+            if ($todoResource->toArray(null)['countTask'] === $todoResource->toArray(null)['countDone']) {
+                $done++;
+            } else {
+                $proses++;
+            }
+        }
+
         $data = [
-            'total' => $todo,
+            'total' => $totalTodo,
             'done' => $done,
             'proses' => $proses,
         ];
@@ -45,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/todos', function () {
-        $data = Title::all();
+        $data = Title::user()->get();
         return new todosResource($data);
     });
     Route::post('/todos', function (Request $request) {
@@ -59,7 +72,10 @@ Route::middleware('auth:sanctum')->group(function () {
             ], 422);
         }
 
-        Title::create($request->input());
+        Title::create([
+            'name' => $request->input('name'),
+            'user_id' => $request->user()->id,
+        ]);
 
         return response()->json([
             'message' => 'Berhasil create data',

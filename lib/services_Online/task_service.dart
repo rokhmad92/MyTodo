@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:project1/global_variable.dart';
-import 'package:project1/models/task_model.dart';
+import '../global_variable.dart';
+import '../models/task_model.dart';
 
 class TaskService {
   late String? token;

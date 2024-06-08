@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project1/services/intro_service.dart';
-import 'package:project1/pages/login.dart';
+import '../services_Online/intro_service.dart';
+import '../pages/login.dart';
 
 class Intro extends StatefulWidget {
   const Intro({super.key});

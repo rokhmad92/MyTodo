@@ -1,8 +1,34 @@
 import 'package:flutter/material.dart';
+import '../pages/login.dart';
+import '../services_Offline/auth_service.dart';
+import '../services_Online/auth_service.dart';
 
-class CardHome extends StatelessWidget {
+class CardHome extends StatefulWidget {
+  const CardHome({Key? key, required this.data, required this.token})
+      : super(key: key);
   final Map<String, dynamic> data;
-  const CardHome({Key? key, required this.data}) : super(key: key);
+  final String? token;
+
+  @override
+  State<CardHome> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<CardHome> {
+  final AuthService authService = AuthService();
+  final AuthServiceOffline authServiceOffline = AuthServiceOffline();
+
+  void logOut() async {
+    var logout = widget.token == 'Offline'
+        ? await authServiceOffline.logout()
+        : await authService.logout();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(logout['message'].toString()),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +52,8 @@ class CardHome extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // IconButton(
               //   onPressed: () {},
@@ -36,7 +62,8 @@ class CardHome extends StatelessWidget {
               //     color: Colors.white,
               //   ),
               // ),
-              Text(
+              const SizedBox(width: 20),
+              const Text(
                 'To Do List',
                 style: TextStyle(
                   fontSize: 25,
@@ -45,14 +72,19 @@ class CardHome extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
-              // IconButton(
-              //   onPressed: () => {},
-              //   icon: const Icon(
-              //     Icons.logout,
-              //     color: Colors.white,
-              //   ),
-              // ),
-              // SizedBox(width: 48), // Jarak antara teks dan ikon tambah (+)
+              IconButton(
+                onPressed: () async {
+                  logOut();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
+                },
+                splashRadius: 25,
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+              ),
+              // SizedBox(width: 48),
             ],
           ),
           const SizedBox(
@@ -64,7 +96,9 @@ class CardHome extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    data['total'].toString(),
+                    widget.data['total'] != null
+                        ? widget.data['total'].toString()
+                        : '0',
                     style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
@@ -87,7 +121,9 @@ class CardHome extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    data['done'].toString(),
+                    widget.data['done'] != null
+                        ? widget.data['done'].toString()
+                        : '0',
                     style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
@@ -110,7 +146,9 @@ class CardHome extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    data['proses'].toString(),
+                    widget.data['proses'] != null
+                        ? widget.data['proses'].toString()
+                        : '0',
                     style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,

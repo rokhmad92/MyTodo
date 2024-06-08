@@ -16,6 +16,7 @@ class taskResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title_id' => $this->title_id,
             'name' => $this->name,
             'done' => $this->done,
         ];

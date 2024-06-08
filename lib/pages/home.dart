@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project1/models/todo_model.dart';
-import 'package:project1/services/todo_service.dart';
-import 'package:project1/widgets/card_home.dart';
-import 'package:project1/widgets/dialog_create.dart';
-import 'package:project1/widgets/list_todo.dart';
+import '../global_variable.dart';
+import '../models/todo_model.dart';
+import '../pages/login.dart';
+import '../services_Offline/todo_service.dart';
+import '../services_Online/todo_service.dart';
+import '../widgets/card_home.dart';
+import '../widgets/dialog_create.dart';
+import '../widgets/list_todo.dart';
 import '../widgets/search.dart';
 
 class Home extends StatefulWidget {
@@ -16,19 +19,44 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<TodoModel> _todos = [];
   Map<String, dynamic> _count = {};
-  final TodoService _todoService = TodoService();
+  final TodoService _todoServiceOnline = TodoService();
+  final TodoServiceOffline _todoServiceOffline = TodoServiceOffline();
   bool _isLoading = false;
+  late String? token = '';
 
-  Future<void> getData({String? orderByCountDone}) async {
+  void getData({String keyword = '', String? orderByCountDone}) async {
+    token = await getToken();
+
     setState(() {
       _todos.clear();
+      _count.clear();
       _isLoading = true;
     });
-    _todos = await _todoService.getTodo(orderBy: orderByCountDone);
-    _count = await _todoService.getCount();
-    setState(() {
-      _isLoading = false;
-    });
+
+    try {
+      if (token == null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Login()));
+      } else if (token != 'Offline') {
+        _todos = await _todoServiceOnline.getTodo(
+            keyword: keyword, orderBy: orderByCountDone);
+        _count = await _todoServiceOnline.getCount();
+      } else {
+        await Future.delayed(const Duration(milliseconds: 100));
+        _todos = await _todoServiceOffline.getTodo(
+            keyword: keyword, orderBy: orderByCountDone);
+        _count = await _todoServiceOffline.getCount();
+        // print(_count);
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -51,43 +79,46 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CardHome(data: _count),
+            CardHome(data: _count, token: token),
             const SizedBox(
               height: 20,
             ),
-            Search(orderBy: _handleOrderByChanged),
+            Search(
+                orderBy: _handleOrderByChanged,
+                search: (keyword) => getData(keyword: keyword),
+                token: token),
             const SizedBox(
               height: 20,
             ),
-            _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    shrinkWrap: true,
-                    itemCount: _todos.length,
-                    itemBuilder: (context, index) {
-                      if (_todos.isEmpty) {
-                        return const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              'Data Kosong',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return ListTodo(todo: _todos[index], getData: getData);
-                      }
-                    },
-                  )
+            if (_isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              )
+            else if (_todos.isEmpty)
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Data Kosong',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              )
+            else
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                shrinkWrap: true,
+                itemCount: _todos.length,
+                itemBuilder: (context, index) {
+                  return ListTodo(
+                      todo: _todos[index], getData: getData, token: token);
+                },
+              )
           ],
         ),
       ),

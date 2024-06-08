@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:project1/models/todo_model.dart';
+import '../models/todo_model.dart';
 import '../global_variable.dart';
 
 class TodoService {
   late String? token;
 
-  Future getTodo({String? orderBy}) async {
+  Future<List<TodoModel>> getTodo(
+      {String keyword = '', String? orderBy}) async {
     try {
       token = await getToken();
       final dio = Dio();
@@ -27,19 +28,29 @@ class TodoService {
               .compareTo(a['countDone'])); // dari terbesar ke terkecil
         }
 
+        // filter serach data
+        if (keyword.isNotEmpty) {
+          responseData = responseData
+              .where((data) =>
+                  data['name'].toLowerCase().contains(keyword.toLowerCase()))
+              .toList();
+        }
+
         List<TodoModel> todos =
             responseData.map((e) => TodoModel.fromJson(e)).toList();
+
         return todos;
       } else {
         // print('Error: ${response.statusCode}');
-        return false;
+        return [];
       }
     } catch (e) {
       // print('Error: $e');
+      return [];
     }
   }
 
-  Future getCount() async {
+  Future<Map<String, dynamic>> getCount() async {
     try {
       token = await getToken();
       final dio = Dio();
@@ -53,11 +64,11 @@ class TodoService {
         return responseData;
       } else {
         // print('Error: ${response.statusCode}');
-        return false;
+        return {'message': 'Error 500'};
       }
     } catch (e) {
       // print('Error: $e');
-      return false;
+      return {'message': e.toString()};
     }
   }
 

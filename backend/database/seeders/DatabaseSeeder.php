@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // user
-        \App\Models\User::insert([
+        $user = \App\Models\User::create([
             'name' => 'User',
             'email' => 'user@gmail.com',
             'password' => bcrypt('password'),
@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         // data
         $a = \App\Models\Title::create([
+            'user_id' => $user->id,
             'name' => 'Belajar Flutter',
             'due' => Carbon::now()->addDay(2),
         ]);
@@ -40,6 +41,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $b = \App\Models\Title::create([
+            'user_id' => $user->id,
             'name' => 'Belajar Laravel',
             'due' => Carbon::now()->addDay(10),
         ]);

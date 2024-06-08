@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
   final Function(String) orderBy;
-  const Search({Key? key, required this.orderBy}) : super(key: key);
+  final Function(String) search;
+  final String? token;
+  const Search(
+      {Key? key,
+      required this.orderBy,
+      required this.search,
+      required this.token})
+      : super(key: key);
 
   @override
   _SearchState createState() => _SearchState();
@@ -10,6 +17,12 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   String orderByValue = 'desc';
+  late String _searchText = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +38,12 @@ class _SearchState extends State<Search> {
               right: deviceWidth * 0.03,
             ),
             child: TextFormField(
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+                widget.search(value);
+              },
               decoration: const InputDecoration(
                 labelText: 'Search',
                 hintText: 'Ketik apa yang anda cari',
@@ -38,21 +57,21 @@ class _SearchState extends State<Search> {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(right: deviceWidth * 0.05),
-          child: IconButton(
-            hoverColor: Colors.white,
-            splashRadius: 25,
-            onPressed: () {
-              setState(() {
-                orderByValue = orderByValue == 'asc' ? 'desc' : 'asc';
-              });
-              // panggil atau beritahu ke parent bahwa ada perubahan di onOrderByChanged
-              widget.orderBy(orderByValue);
-            },
-            icon: const Icon(Icons.filter_list),
+        if (widget.token != 'Offline')
+          Padding(
+            padding: EdgeInsets.only(right: deviceWidth * 0.05),
+            child: IconButton(
+              splashRadius: 25,
+              onPressed: () {
+                setState(() {
+                  orderByValue = orderByValue == 'asc' ? 'desc' : 'asc';
+                });
+                // panggil atau beritahu ke parent bahwa ada perubahan di onOrderByChanged
+                widget.orderBy(orderByValue);
+              },
+              icon: const Icon(Icons.filter_list),
+            ),
           ),
-        ),
       ],
     );
   }

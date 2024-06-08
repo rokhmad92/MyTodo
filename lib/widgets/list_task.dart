@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project1/models/task_model.dart';
-import 'package:project1/services/task_service.dart';
+import '../global_variable.dart';
+import '../models/task_model.dart';
+import '../services_Offline/task_service.dart';
+import '../services_Online/task_service.dart';
 
 class ListTask extends StatefulWidget {
   final TaskModel task;
@@ -14,9 +16,14 @@ class ListTask extends StatefulWidget {
 class _ListTaskState extends State<ListTask> {
   late final TaskModel task;
   final TaskService taskService = TaskService();
+  final TaskServiceOffline taskServiceOffline = TaskServiceOffline();
+  late String? token = '';
 
   Future<void> done(id) async {
-    Map<String, dynamic> result = await taskService.changeTask(id);
+    token = await getToken();
+    Map<String, dynamic> result = token == 'Offline'
+        ? await taskServiceOffline.changeTask(id)
+        : await taskService.changeTask(id);
     widget.getData();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -27,8 +34,12 @@ class _ListTaskState extends State<ListTask> {
     );
   }
 
-  Future<void> remove(id) async {
-    Map<String, dynamic> result = await taskService.removeTask(id);
+  Future<void> remove(id, titleId) async {
+    token = await getToken();
+    Map<String, dynamic> result = token == 'Offline'
+        ? await taskServiceOffline.removeTask(id, titleId)
+        : await taskService.removeTask(id);
+    await Future.delayed(const Duration(milliseconds: 100));
     widget.getData();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +101,7 @@ class _ListTaskState extends State<ListTask> {
               IconButton(
                 splashRadius: 20,
                 icon: const Icon(Icons.remove),
-                onPressed: () => {remove(task.id)},
+                onPressed: () => {remove(task.id, task.titleId)},
               ),
             ],
           ),
