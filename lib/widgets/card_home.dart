@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../pages/login.dart';
-import '../services_Offline/auth_service.dart';
-import '../services_Online/auth_service.dart';
+import 'package:project1/pages/login.dart';
+import 'package:project1/services_Offline/auth_service.dart';
+import 'package:project1/services_Online/auth_service.dart';
 
 class CardHome extends StatefulWidget {
   const CardHome({Key? key, required this.data, required this.token})
@@ -112,7 +112,7 @@ class _MyWidgetState extends State<CardHome> {
                     'Total',
                     style: TextStyle(
                         fontSize: 23,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   )
@@ -137,7 +137,7 @@ class _MyWidgetState extends State<CardHome> {
                     'Selesai',
                     style: TextStyle(
                         fontSize: 23,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   )
@@ -162,7 +162,7 @@ class _MyWidgetState extends State<CardHome> {
                     'Proses',
                     style: TextStyle(
                         fontSize: 23,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: Colors.white),
                     textAlign: TextAlign.center,
                   )

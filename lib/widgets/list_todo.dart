@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/todo_model.dart';
-import '../pages/show_todo.dart';
-import '../services_Offline/todo_service.dart';
-import '../services_Online/todo_service.dart';
+import 'package:project1/models/todo_model.dart';
+import 'package:project1/pages/show_todo.dart';
+import 'package:project1/services_Offline/todo_service.dart';
+import 'package:project1/services_Online/todo_service.dart';
 
 class ListTodo extends StatefulWidget {
   final TodoModel todo;
@@ -97,7 +97,7 @@ class _ListTodoState extends State<ListTodo> {
                     '${todo.countTask} Task',
                     style: TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w400,
                         color: Colors.grey[400]),
                   ),
                   IconButton(

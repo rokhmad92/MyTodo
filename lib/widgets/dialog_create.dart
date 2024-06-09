@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services_Offline/task_service.dart';
-import '../services_Offline/todo_service.dart';
-import '../services_Online/task_service.dart';
+import 'package:project1/services_Offline/task_service.dart';
+import 'package:project1/services_Offline/todo_service.dart';
+import 'package:project1/services_Online/task_service.dart';
 import '../services_Online/todo_service.dart';
 import '../global_variable.dart';
 

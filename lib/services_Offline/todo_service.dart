@@ -1,4 +1,4 @@
-import '../models/todo_model.dart';
+import 'package:project1/models/todo_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:math';

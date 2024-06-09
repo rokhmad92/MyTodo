@@ -61,13 +61,16 @@ class _IntroState extends State<Intro> {
                         contents[i].title,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            fontSize: 21, fontWeight: FontWeight.bold),
+                            fontSize: 21,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const SizedBox(height: 20),
                       Text(
                         contents[i].text,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 18),
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                       const SizedBox(height: 20),
                     ],

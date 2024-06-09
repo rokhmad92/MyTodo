@@ -12,12 +12,12 @@ class Search extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SearchState createState() => _SearchState();
+  SearchState createState() => SearchState();
 }
 
-class _SearchState extends State<Search> {
+class SearchState extends State<Search> {
   String orderByValue = 'desc';
-  late String _searchText = '';
+  late String searchText = '';
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _SearchState extends State<Search> {
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
-                  _searchText = value;
+                  searchText = value;
                 });
                 widget.search(value);
               },

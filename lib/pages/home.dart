@@ -36,7 +36,13 @@ class _HomeState extends State<Home> {
     try {
       if (token == null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Login()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+        );
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => );
       } else if (token != 'Offline') {
         _todos = await _todoServiceOnline.getTodo(
             keyword: keyword, orderBy: orderByCountDone);

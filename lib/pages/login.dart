@@ -111,7 +111,7 @@ class LoginState extends State<Login> {
                     const Text(
                       'Selamat Datang',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 25,
                       ),
                     ),
@@ -121,7 +121,7 @@ class LoginState extends State<Login> {
                     const Text(
                       'Silahkan mengisi form login terlebih dahulu untuk menikmati fasilitas kami',
                       style: TextStyle(
-                        fontWeight: FontWeight.w200,
+                        fontWeight: FontWeight.w400,
                         fontSize: 17,
                         color: Colors.grey,
                       ),
@@ -210,7 +210,9 @@ class LoginState extends State<Login> {
                                 },
                                 child: const Text(
                                   "Log in",
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal),
                                 ),
                               ),
                             ),
@@ -236,6 +238,7 @@ class LoginState extends State<Login> {
                                       'Tanpa Login',
                                       style: TextStyle(
                                         fontSize: 20,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                                   ],
@@ -269,6 +272,7 @@ class LoginState extends State<Login> {
                                       'Daftar Akun',
                                       style: TextStyle(
                                         fontSize: 20,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -332,6 +336,7 @@ class LoginState extends State<Login> {
                                       'Google',
                                       style: TextStyle(
                                         fontSize: 20,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
