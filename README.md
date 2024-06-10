@@ -10,8 +10,6 @@ Todo List application which provides 2 authentication options by logging in via 
 - BackEnd : [Laravel](https://laravel.com)
 - Database : [MySQL 8.2](https://www.apachefriends.org/download.html)
 
-## Getting Started
-
 ## Intro Screen
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/1.png?raw=true)
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/2.jpeg?raw=true)
