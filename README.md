@@ -12,7 +12,7 @@ Todo List application which provides 2 authentication options by logging in via 
 
 ## Getting Started
 
-- Intro Screen
+## Intro Screen
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/1.png?raw=true)
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/2.jpeg?raw=true)
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/3.jpeg?raw=true)
