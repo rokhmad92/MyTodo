@@ -17,11 +17,11 @@ Todo List application which provides 2 authentication options by logging in via 
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/2.jpeg?raw=true)
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/3.jpeg?raw=true)
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/4.jpeg?raw=true)
-- Login
+## Login
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/5.jpeg?raw=true)
-- Home
+## Home
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/6.jpeg?raw=true)
-- Show Data
+## Show Data
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/7.jpeg?raw=true)
-- Modal Create
+## Modal Create
 ![alt text](https://github.com/rokhmad92/flutterTodo/blob/master/assets/dokumentasi/8.jpeg?raw=true)
