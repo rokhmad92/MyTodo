@@ -20,7 +20,12 @@ class TaskServiceOffline {
           .where((task) => task.titleId == id)
           .toList();
 
-      return data;
+      // Filter data yang memiliki nilai done true dan done false
+      List<TaskModel> notEqualData = data.where((task) => task.done == 0).toList();
+      List<TaskModel> equalData = data.where((task) => task.done == 1).toList();
+
+      List<TaskModel> responseData = [...notEqualData, ...equalData];
+      return responseData;
     } catch (e) {
       // print('Error Get Task: $e');
       return [];
