@@ -60,9 +60,8 @@ class _ListTaskState extends State<ListTask> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
       child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 8),
         elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

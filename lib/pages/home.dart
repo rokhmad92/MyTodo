@@ -35,9 +35,7 @@ class _HomeState extends State<Home> {
 
     try {
       if (token == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
+        Navigator.push(context,MaterialPageRoute(
             builder: (context) => const Login(),
           ),
         );
@@ -84,52 +82,47 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             CardHome(data: _count, token: token),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Search(
-                orderBy: _handleOrderByChanged,
-                search: (keyword) => getData(keyword: keyword),
-                token: token),
-            const SizedBox(
-              height: 20,
+              orderBy: _handleOrderByChanged,
+              search: (keyword) => getData(keyword: keyword),
+              token: token,
             ),
-            if (_isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              )
-            else if (_todos.isEmpty)
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'Data Kosong',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              )
-            else
-              ListView.builder(
-                scrollDirection: Axis.vertical,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                shrinkWrap: true,
-                itemCount: _todos.length,
-                itemBuilder: (context, index) {
-                  return ListTodo(
-                      todo: _todos[index], getData: getData, token: token);
-                },
-              )
+            const SizedBox(height: 20),
+            _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : _todos.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Data Kosong',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _todos.length,
+                        itemBuilder: (context, index) {
+                          return ListTodo(
+                            todo: _todos[index],
+                            getData: getData,
+                            token: token,
+                          );
+                        },
+                      ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.blueGrey[100],
         onPressed: () async {
           String? result =
               await TodoDialogHelper.showTodoDialog(context, 'home');

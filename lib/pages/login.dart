@@ -134,7 +134,7 @@ class LoginState extends State<Login> {
                       key: _formKey,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: deviceWidth * 0.05,
+                          horizontal: deviceWidth * 0.01,
                         ),
                         child: Column(
                           children: [
@@ -205,6 +205,10 @@ class LoginState extends State<Login> {
                               width: double.infinity,
                               height: deviceHeight * 0.06,
                               child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5))),
                                 onPressed: () {
                                   doLogin(context);
                                 },
@@ -253,7 +257,7 @@ class LoginState extends State<Login> {
                               height: deviceHeight * 0.06,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey[50],
+                                  backgroundColor: Colors.grey[100],
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                         color: Colors.grey.shade100,
@@ -312,7 +316,7 @@ class LoginState extends State<Login> {
                               height: deviceHeight * 0.06,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey[50],
+                                  backgroundColor: Colors.grey[100],
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                         color: Colors.grey.shade100,

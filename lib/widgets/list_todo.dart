@@ -49,7 +49,7 @@ class _ListTodoState extends State<ListTodo> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 14),
+      margin: const EdgeInsets.all(10),
       elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -64,8 +64,8 @@ class _ListTodoState extends State<ListTodo> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.all(20),
-          width: deviceWidth * 0.9,
+          padding: const EdgeInsets.all(18),
+          width: deviceWidth * 0.7,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
